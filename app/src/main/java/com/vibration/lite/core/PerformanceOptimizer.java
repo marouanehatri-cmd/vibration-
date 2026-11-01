@@ -3,6 +3,7 @@ package com.vibration.lite.core;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.os.Build;
 import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
@@ -35,6 +36,18 @@ public class PerformanceOptimizer {
             }
         } catch (Exception ignored) {}
         return 1024;
+    }
+
+    public static long getTotalDeviceMemoryMB(Context context) {
+        try {
+            ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            if (am != null) {
+                ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
+                am.getMemoryInfo(mi);
+                return mi.totalMem / (1024 * 1024);
+            }
+        } catch (Exception ignored) {}
+        return 4096;
     }
 
     public static int getDisplayRefreshRate(Context context) {
