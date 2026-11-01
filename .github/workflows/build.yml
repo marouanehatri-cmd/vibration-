@@ -26,10 +26,13 @@ jobs:
         with:
           gradle-version: '8.4'
 
+      - name: Accept Android SDK Licenses
+        run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses 2>/dev/null || true
+
       - name: Build Debug APK
         run: gradle assembleDebug --no-daemon
 
-      - name: Upload Vibration APK Artifact
+      - name: Upload Vibration APK
         uses: actions/upload-artifact@v4
         with:
           name: Vibration-v1.0-debug
