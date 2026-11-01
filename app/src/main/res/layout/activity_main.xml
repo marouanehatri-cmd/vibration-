@@ -3,131 +3,248 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark"
-    android:padding="24dp">
+    android:background="#07080E"
+    android:padding="20dp">
 
+    <!-- Top Status HUD Bar -->
     <LinearLayout
-        android:id="@+id/telemetryBar"
+        android:id="@+id/hudContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:padding="8dp"
+        android:weightSum="2"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/tvRamBadge"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="RAM: 84MB (Target &lt; 150MB)"
-            android:textColor="@color/green_neon"
-            android:textSize="12sp"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="4dp" />
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@drawable/card_glass_bg"
+            android:padding="10dp"
+            android:layout_marginEnd="6dp">
 
-        <Space
-            android:layout_width="12dp"
-            android:layout_height="wrap_content" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RAM USAGE (IDLE)"
+                android:textColor="#9CA3AF"
+                android:textSize="10sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tvGpuBadge"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tvRamBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="74 MB / 150 MB"
+                android:textColor="#10B981"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginTop="2dp" />
+
+            <ProgressBar
+                android:id="@+id/ramProgressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:progress="48"
+                android:progressTint="#10B981"
+                android:layout_marginTop="6dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="GPU Boost: ON (60 FPS)"
-            android:textColor="@color/accent_cyan"
-            android:textSize="12sp"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="4dp" />
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@drawable/card_glass_bg"
+            android:padding="10dp"
+            android:layout_marginStart="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GPU BOOST"
+                android:textColor="#9CA3AF"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvGpuBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="60 FPS TURBO"
+                android:textColor="#38BDF8"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginTop="2dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="● Hardware Accel ON"
+                android:textColor="#818CF8"
+                android:textSize="10sp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
     </LinearLayout>
 
+    <!-- Center Stage: Glow Logo & Brand Identity -->
     <LinearLayout
-        android:id="@+id/heroSection"
-        android:layout_width="wrap_content"
+        android:id="@+id/centerBranding"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/telemetryBar"
-        app:layout_constraintBottom_toTopOf="@id/actionsSection"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/hudContainer"
+        app:layout_constraintBottom_toTopOf="@id/actionsContainer">
 
         <ImageView
             android:id="@+id/ivLogo"
-            android:layout_width="110dp"
-            android:layout_height="110dp"
-            android:src="@mipmap/ic_launcher"
-            android:contentDescription="Vibration Logo" />
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/logo_vibration"
+            android:contentDescription="Vibration Neon Logo" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="VIBRATION"
-            android:textSize="32sp"
+            android:textColor="#FFFFFF"
+            android:textSize="28sp"
             android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:letterSpacing="0.15"
-            android:layout_marginTop="16dp" />
+            android:letterSpacing="0.18"
+            android:layout_marginTop="12dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ultra-Lightweight Virtual Space"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp" />
-
-        <TextView
-            android:id="@+id/tvEngineStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="● Ready to clone eFootball"
-            android:textColor="@color/accent_purple"
+            android:text="Ultra-Performance Virtual Space"
+            android:textColor="#94A3B8"
             android:textSize="13sp"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="2dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/badge_pill_bg"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="6dp"
+            android:layout_marginTop="12dp">
+
+            <View
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/dot_green"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/tvEngineStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vibration Engine Ready"
+                android:textColor="#C084FC"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
 
+    <!-- Bottom Actions: Primary Buttons & Play Store Hub -->
     <LinearLayout
-        android:id="@+id/actionsSection"
+        android:id="@+id/actionsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="24dp">
+        android:layout_marginBottom="12dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAddApp"
             android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:text="@string/btn_add_efootball"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp"
+            android:layout_height="60dp"
+            android:text="ADD eFOOTBALL"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
             android:textStyle="bold"
-            app:cornerRadius="14dp"
-            app:backgroundTint="@color/bg_card"
-            app:strokeColor="@color/accent_purple"
-            app:strokeWidth="1.5dp" />
+            android:letterSpacing="0.08"
+            app:cornerRadius="16dp"
+            app:backgroundTint="#151928"
+            app:strokeColor="#8B5CF6"
+            app:strokeWidth="2dp"
+            app:icon="@android:drawable/ic_input_add"
+            app:iconTint="#A855F7"
+            app:iconGravity="textStart" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLaunch"
             android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:layout_marginTop="14dp"
-            android:text="@string/btn_launch_vibration"
-            android:textColor="@color/text_primary"
+            android:layout_height="62dp"
+            android:layout_marginTop="12dp"
+            android:text="LAUNCH VIBRATION"
+            android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:cornerRadius="14dp"
-            app:backgroundTint="@color/accent_purple" />
+            android:letterSpacing="0.08"
+            app:cornerRadius="16dp"
+            app:backgroundTint="#7C3AED"
+            app:icon="@android:drawable/ic_media_play"
+            app:iconTint="#FFFFFF"
+            app:iconGravity="textStart" />
 
-        <TextView
-            android:id="@+id/tvCheckUpdate"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/cardPlayStore"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:text="Check eFootball Google Play Updates ↗"
-            android:textColor="@color/accent_blue"
-            android:textSize="13sp" />
+            android:orientation="horizontal"
+            android:background="@drawable/card_glass_bg"
+            android:padding="12dp"
+            android:layout_marginTop="14dp"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@android:drawable/ic_menu_upload"
+                app:tint="#38BDF8"
+                android:layout_marginEnd="12dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvPlayStoreTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Google Play Store Hub"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvGameVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Install or Update eFootball directly"
+                    android:textColor="#94A3B8"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OPEN ↗"
+                android:textColor="#38BDF8"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
