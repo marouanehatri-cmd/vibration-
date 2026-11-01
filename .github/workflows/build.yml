@@ -26,155 +26,400 @@ jobs:
         with:
           gradle-version: '8.4'
 
-      - name: Configure Android SDK and Ensure Missing Files Exist
+      - name: Accept Android SDK Licenses
         run: |
-          echo "sdk.dir=$ANDROID_HOME" > local.properties
-          mkdir -p app/src/main/res/drawable
-          mkdir -p app/src/main/res/layout
-          mkdir -p app/src/main/res/values
-          mkdir -p app/src/main/java/com/vibration/lite/core
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses 2>/dev/null || true
 
-          # 1. Auto-create card_glass_bg.xml if missing
-          if [ ! -f app/src/main/res/drawable/card_glass_bg.xml ]; then
-            cat << 'EOF' > app/src/main/res/drawable/card_glass_bg.xml
-            <shape xmlns:android="http://schemas.android.com/apk/res/android">
-                <corners android:radius="14dp" />
-                <solid android:color="#121626" />
-                <stroke android:width="1dp" android:color="#242B42" />
-            </shape>
-          EOF
-          fi
+      - name: Verify and Assemble Clean Vibration Project
+        run: |
+          python3 -c "import textwrap, sys; exec(textwrap.dedent(sys.stdin.read()))" << 'PYEOF'
+          import os
 
-          # 2. Auto-create badge_pill_bg.xml if missing
-          if [ ! -f app/src/main/res/drawable/badge_pill_bg.xml ]; then
-            cat << 'EOF' > app/src/main/res/drawable/badge_pill_bg.xml
-            <shape xmlns:android="http://schemas.android.com/apk/res/android">
-                <corners android:radius="24dp" />
-                <solid android:color="#1A1830" />
-                <stroke android:width="1dp" android:color="#4C1D95" />
-            </shape>
-          EOF
-          fi
+          files = {
+              "settings.gradle": """pluginManagement {
+              repositories {
+                  google()
+                  mavenCentral()
+                  gradlePluginPortal()
+              }
+          }
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+              repositories {
+                  google()
+                  mavenCentral()
+                  maven { url 'https://jitpack.io' }
+              }
+          }
+          rootProject.name = "Vibration"
+          include ':app'
+          """,
 
-          # 3. Auto-create dot_green.xml if missing
-          if [ ! -f app/src/main/res/drawable/dot_green.xml ]; then
-            cat << 'EOF' > app/src/main/res/drawable/dot_green.xml
-            <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
-                <solid android:color="#10B981" />
-            </shape>
-          EOF
-          fi
+              "build.gradle": """plugins {
+              id 'com.android.application' version '8.1.4' apply false
+          }
+          """,
 
-          # 4. Auto-create your exact neon Vibration Logo vector if missing
-          if [ ! -f app/src/main/res/drawable/logo_vibration.xml ]; then
-            cat << 'EOF' > app/src/main/res/drawable/logo_vibration.xml
-            <vector xmlns:android="http://schemas.android.com/apk/res/android"
-                android:width="120dp" android:height="120dp"
-                android:viewportWidth="120" android:viewportHeight="120">
-                <path android:fillColor="#0D0E15" android:pathData="M16,0 L104,0 A16,16 0 0,1 120,16 L120,104 A16,16 0 0,1 104,120 L16,120 A16,16 0 0,1 16,0 Z" />
-                <path android:strokeColor="#38BDF8" android:strokeWidth="3.5" android:strokeLineCap="round" android:fillColor="#00000000" android:pathData="M38,44 A24,24 0 0,0 38,76" />
-                <path android:strokeColor="#3B82F6" android:strokeWidth="3.5" android:strokeLineCap="round" android:fillColor="#00000000" android:pathData="M30,37 A36,36 0 0,0 30,83" />
-                <path android:strokeColor="#2563EB" android:strokeWidth="3.5" android:strokeLineCap="round" android:fillColor="#00000000" android:pathData="M23,30 A48,48 0 0,0 23,90" />
-                <path android:strokeColor="#C084FC" android:strokeWidth="3.5" android:strokeLineCap="round" android:fillColor="#00000000" android:pathData="M82,44 A24,24 0 0,1 82,76" />
-                <path android:strokeColor="#A855F7" android:strokeWidth="3.5" android:strokeLineCap="round" android:fillColor="#00000000" android:pathData="M90,37 A36,36 0 0,1 90,83" />
-                <path android:strokeColor="#9333EA" android:strokeWidth="3.5" android:strokeLineCap="round" android:fillColor="#00000000" android:pathData="M97,30 A48,48 0 0,1 97,90" />
-                <path android:fillColor="#38BDF8" android:pathData="M34,35 L42,35 L60,85 L52,85 Z" />
-                <path android:strokeColor="#0D0E15" android:strokeWidth="2" android:pathData="M40,36 L52,70" />
-                <path android:fillColor="#A855F7" android:pathData="M60,85 L74,48 C78,38 84,35 88,35 C82,37 72,42 66,58 L60,75 Z" />
-                <path android:fillColor="#6366F1" android:pathData="M52,85 L60,88 L68,75 L60,85 Z" />
-            </vector>
-          EOF
-          fi
-          if [ ! -f app/src/main/res/drawable/ic_launcher.xml ]; then
-            cp app/src/main/res/drawable/logo_vibration.xml app/src/main/res/drawable/ic_launcher.xml
-          fi
+              "gradle.properties": """org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+          android.useAndroidX=true
+          android.nonTransitiveRClass=true
+          """,
 
-          # 5. Auto-create activity_play_store.xml if missing
-          if [ ! -f app/src/main/res/layout/activity_play_store.xml ]; then
-            cat << 'EOF' > app/src/main/res/layout/activity_play_store.xml
-            <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#0A0B10">
-                <LinearLayout
-                    android:id="@+id/headerStore"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="#121524"
-                    android:padding="16dp"
-                    app:layout_constraintTop_toTopOf="parent">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="GOOGLE PLAY STORE HUB"
-                            android:textColor="#FFFFFF"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnRefresh"
-                            style="@style/Widget.MaterialComponents.Button.TextButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Refresh"
-                            android:textColor="#A855F7" />
-                    </LinearLayout>
-                    <TextView
-                        android:id="@+id/tvStoreStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Ready"
-                        android:textColor="#9CA3AF"
-                        android:textSize="12sp" />
-                </LinearLayout>
-                <ProgressBar
-                    android:id="@+id/progressBarLoading"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="4dp"
-                    android:progressTint="#8B5CF6"
-                    android:visibility="gone"
-                    app:layout_constraintTop_toBottomOf="@id/headerStore" />
-                <WebView
-                    android:id="@+id/webViewPlayStore"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintTop_toBottomOf="@id/progressBarLoading"
-                    app:layout_constraintBottom_toTopOf="@id/bottomActions" />
-                <LinearLayout
-                    android:id="@+id/bottomActions"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="#121524"
-                    android:padding="12dp"
-                    app:layout_constraintBottom_toBottomOf="parent">
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnDirectPlayStore"
-                        android:layout_width="match_parent"
-                        android:layout_height="52dp"
-                        android:text="Open in Native Play Store App ↗"
-                        android:textColor="#FFFFFF"
-                        app:cornerRadius="12dp"
-                        app:backgroundTint="#8B5CF6" />
-                </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-          EOF
-          fi
+              "app/proguard-rules.pro": "# Proguard rules\n-dontwarn **\n",
 
-      - name: Build Debug APK
-        run: gradle assembleDebug --stacktrace --no-daemon
+              "app/build.gradle": """plugins {
+              id 'com.android.application'
+          }
 
-      - name: Upload Vibration APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Vibration-v1.0-debug
-          path: app/build/outputs/apk/debug/*.apk
-          retention-days: 14
+          android {
+              namespace 'com.vibration.lite'
+              compileSdk 33
+
+              defaultConfig {
+                  applicationId "com.vibration.lite"
+                  minSdk 28
+                  targetSdk 33
+                  versionCode 1
+                  versionName "1.0.0-lite"
+                  testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+              }
+
+              buildTypes {
+                  release {
+                      minifyEnabled false
+                      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+                  }
+                  debug {
+                      minifyEnabled false
+                  }
+              }
+
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_17
+                  targetCompatibility JavaVersion.VERSION_17
+              }
+
+              packaging {
+                  resources {
+                      excludes += '/META-INF/{AL2.0,LGPL2.1}'
+                  }
+              }
+          }
+
+          configurations.all {
+              exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+              exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
+          }
+
+          dependencies {
+              implementation 'androidx.appcompat:appcompat:1.6.1'
+              implementation 'com.google.android.material:material:1.9.0'
+              implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+          }
+          """,
+
+              "app/src/main/AndroidManifest.xml": """<?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              package="com.vibration.lite">
+
+              <uses-permission android:name="android.permission.INTERNET" />
+              <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+              <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+              <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+              <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+                  android:maxSdkVersion="32" tools:ignore="ScopedStorage" />
+              <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+                  tools:ignore="ScopedStorage" />
+              <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+              <uses-permission android:name="android.permission.WAKE_LOCK" />
+              <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+              <uses-permission android:name="android.permission.VIBRATE" />
+              <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+                  tools:ignore="QueryAllPackagesPermission" />
+              <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+              <queries>
+                  <package android:name="com.android.vending" />
+                  <package android:name="com.google.android.gms" />
+                  <package android:name="com.google.android.gsf" />
+                  <package android:name="com.konami.efootballpes" />
+                  <intent>
+                      <action android:name="android.intent.action.VIEW" />
+                      <data android:scheme="market" />
+                  </intent>
+              </queries>
+
+              <application
+                  android:name=".AppApplication"
+                  android:allowBackup="false"
+                  android:icon="@drawable/ic_launcher"
+                  android:label="@string/app_name"
+                  android:roundIcon="@drawable/ic_launcher"
+                  android:supportsRtl="true"
+                  android:theme="@style/Theme.Vibration"
+                  android:hardwareAccelerated="true"
+                  android:largeHeap="true"
+                  android:requestLegacyExternalStorage="true"
+                  android:extractNativeLibs="true"
+                  tools:targetApi="33">
+
+                  <activity
+                      android:name=".MainActivity"
+                      android:exported="true"
+                      android:hardwareAccelerated="true"
+                      android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+                      android:theme="@style/Theme.Vibration">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN" />
+                          <category android:name="android.intent.category.LAUNCHER" />
+                      </intent-filter>
+                  </activity>
+
+                  <activity
+                      android:name=".core.PlayStoreActivity"
+                      android:exported="false"
+                      android:hardwareAccelerated="true"
+                      android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+                      android:theme="@style/Theme.Vibration" />
+
+                  <activity
+                      android:name=".core.StubActivity"
+                      android:exported="false"
+                      android:hardwareAccelerated="true"
+                      android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|uiMode|keyboardHidden"
+                      android:theme="@style/Theme.Vibration.Fullscreen" />
+
+                  <provider
+                      android:name=".core.VirtualCoreEngine$ShadowFileProvider"
+                      android:authorities="com.vibration.lite.virtual.provider"
+                      android:exported="false"
+                      android:grantUriPermissions="true" />
+              </application>
+
+          </manifest>
+          """,
+
+              "app/src/main/res/values/strings.xml": """<resources>
+              <string name="app_name">Vibration</string>
+              <string name="btn_add_efootball">ADD eFOOTBALL</string>
+              <string name="btn_launch_vibration">LAUNCH VIBRATION</string>
+              <string name="status_ready">Vibration Engine Ready</string>
+          </resources>
+          """,
+
+              "app/src/main/res/values/colors.xml": """<resources>
+              <color name="bg_dark">#07080E</color>
+              <color name="accent_purple">#8B5CF6</color>
+              <color name="text_primary">#FFFFFF</color>
+          </resources>
+          """,
+
+              "app/src/main/res/values/styles.xml": """<resources>
+              <style name="Theme.Vibration" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+                  <item name="colorPrimary">@color/accent_purple</item>
+                  <item name="android:windowBackground">@color/bg_dark</item>
+                  <item name="android:statusBarColor">@color/bg_dark</item>
+                  <item name="android:navigationBarColor">@color/bg_dark</item>
+              </style>
+              <style name="Theme.Vibration.Fullscreen" parent="Theme.Vibration">
+                  <item name="android:windowFullscreen">true</item>
+              </style>
+          </resources>
+          """,
+
+              "app/src/main/res/drawable/card_glass_bg.xml": """<?xml version="1.0" encoding="utf-8"?>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android">
+              <corners android:radius="14dp" />
+              <solid android:color="#121626" />
+              <stroke android:width="1dp" android:color="#242B42" />
+          </shape>
+          """,
+
+              "app/src/main/res/drawable/badge_pill_bg.xml": """<?xml version="1.0" encoding="utf-8"?>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android">
+              <corners android:radius="24dp" />
+              <solid android:color="#1A1830" />
+              <stroke android:width="1dp" android:color="#4C1D95" />
+          </shape>
+          """,
+
+              "app/src/main/res/drawable/dot_green.xml": """<?xml version="1.0" encoding="utf-8"?>
+          <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+              <solid android:color="#10B981" />
+          </shape>
+          """,
+
+              "app/src/main/res/drawable/ic_launcher.xml": """<?xml version="1.0" encoding="utf-8"?>
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="120dp" android:height="120dp"
+              android:viewportWidth="120" android:viewportHeight="120">
+              <path android:fillColor="#0D0E15" android:pathData="M16,0 L104,0 A16,16 0 0,1 120,16 L120,104 A16,16 0 0,1 104,120 L16,120 A16,16 0 0,1 0,104 L0,16 A16,16 0 0,1 16,0 Z" />
+              <path android:strokeColor="#38BDF8" android:strokeWidth="3.5" android:strokeLineCap="round" android:fillColor="#00000000" android:pathData="M38,44 A24,24 0 0,0 38,76" />
+              <path android:strokeColor="#3B82F6" android:strokeWidth="3.5" android:strokeLineCap="round" android:fillColor="#00000000" android:pathData="M30,37 A36,36 0 0,0 30,83" />
+              <path android:strokeColor="#2563EB" android:strokeWidth="3.5" android:strokeLineCap="round" android:fillColor="#00000000" android:pathData="M23,30 A48,48 0 0,0 23,90" />
+              <path android:strokeColor="#C084FC" android:strokeWidth="3.5" android:strokeLineCap="round" android:fillColor="#00000000" android:pathData="M82,44 A24,24 0 0,1 82,76" />
+              <path android:strokeColor="#A855F7" android:strokeWidth="3.5" android:strokeLineCap="round" android:fillColor="#00000000" android:pathData="M90,37 A36,36 0 0,1 90,83" />
+              <path android:strokeColor="#9333EA" android:strokeWidth="3.5" android:strokeLineCap="round" android:fillColor="#00000000" android:pathData="M97,30 A48,48 0 0,1 97,90" />
+              <path android:fillColor="#38BDF8" android:pathData="M34,35 L42,35 L60,85 L52,85 Z" />
+              <path android:strokeColor="#0D0E15" android:strokeWidth="2" android:pathData="M40,36 L52,70" />
+              <path android:fillColor="#A855F7" android:pathData="M60,85 L74,48 C78,38 84,35 88,35 C82,37 72,42 66,58 L60,75 Z" />
+              <path android:fillColor="#6366F1" android:pathData="M52,85 L60,88 L68,75 L60,85 Z" />
+          </vector>
+          """,
+
+              "app/src/main/res/layout/activity_main.xml": """<?xml version="1.0" encoding="utf-8"?>
+          <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#07080E"
+              android:padding="20dp">
+
+              <LinearLayout
+                  android:id="@+id/hudContainer"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:gravity="center"
+                  android:weightSum="2"
+                  app:layout_constraintTop_toTopOf="parent">
+
+                  <LinearLayout
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:orientation="vertical"
+                      android:background="@drawable/card_glass_bg"
+                      android:padding="10dp"
+                      android:layout_marginEnd="6dp">
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="RAM USAGE (IDLE)"
+                          android:textColor="#9CA3AF"
+                          android:textSize="10sp"
+                          android:textStyle="bold" />
+                      <TextView
+                          android:id="@+id/tvRamBadge"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="74 MB / 150 MB"
+                          android:textColor="#10B981"
+                          android:textSize="14sp"
+                          android:textStyle="bold"
+                          android:layout_marginTop="2dp" />
+                      <ProgressBar
+                          android:id="@+id/ramProgressBar"
+                          style="?android:attr/progressBarStyleHorizontal"
+                          android:layout_width="match_parent"
+                          android:layout_height="4dp"
+                          android:progress="48"
+                          android:progressTint="#10B981"
+                          android:layout_marginTop="6dp" />
+                  </LinearLayout>
+
+                  <LinearLayout
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:orientation="vertical"
+                      android:background="@drawable/card_glass_bg"
+                      android:padding="10dp"
+                      android:layout_marginStart="6dp">
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="GPU BOOST"
+                          android:textColor="#9CA3AF"
+                          android:textSize="10sp"
+                          android:textStyle="bold" />
+                      <TextView
+                          android:id="@+id/tvGpuBadge"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="60 FPS TURBO"
+                          android:textColor="#38BDF8"
+                          android:textSize="14sp"
+                          android:textStyle="bold"
+                          android:layout_marginTop="2dp" />
+                      <TextView
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="● Hardware Accel ON"
+                          android:textColor="#818CF8"
+                          android:textSize="10sp"
+                          android:layout_marginTop="4dp" />
+                  </LinearLayout>
+              </LinearLayout>
+
+              <LinearLayout
+                  android:id="@+id/centerBranding"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:gravity="center"
+                  app:layout_constraintTop_toBottomOf="@id/hudContainer"
+                  app:layout_constraintBottom_toTopOf="@id/actionsContainer">
+
+                  <ImageView
+                      android:id="@+id/ivLogo"
+                      android:layout_width="120dp"
+                      android:layout_height="120dp"
+                      android:src="@drawable/ic_launcher"
+                      android:contentDescription="Vibration Neon Logo" />
+
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="VIBRATION"
+                      android:textColor="#FFFFFF"
+                      android:textSize="28sp"
+                      android:textStyle="bold"
+                      android:letterSpacing="0.18"
+                      android:layout_marginTop="12dp" />
+
+                  <TextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="Ultra-Performance Virtual Space"
+                      android:textColor="#94A3B8"
+                      android:textSize="13sp"
+                      android:layout_marginTop="2dp" />
+
+                  <LinearLayout
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:gravity="center_vertical"
+                      android:background="@drawable/badge_pill_bg"
+                      android:paddingHorizontal="14dp"
+                      android:paddingVertical="6dp"
+                      android:layout_marginTop="12dp">
+                      <View
+                          android:layout_width="8dp"
+                          android:layout_height="8dp"
+                          android:background="@drawable/dot_green"
+                          android:layout_marginEnd="8dp" />
+                      <TextView
+                          android:id="@+id/tvEngineStatus"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="Vibration Engine Ready"
+                          android:textColor="#C084FC"
+                          android:textSize="12sp"
+                          android:textStyle="bold" />
+                  </LinearLayout>
+              </LinearLayout>
+
+              <LinearLayout
+                  android:id="@+id/actionsContainer"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  app:layout_constraintBottom_toBottomOf="parent"
+                  android:layout_marginBottom="12dp">
+
+                  <com.google.android.material.button.MaterialButton
+                      android:id="@+id/btnAddApp"
+           
