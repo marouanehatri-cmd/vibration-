@@ -26,6 +26,13 @@ jobs:
         with:
           gradle-version: '8.4'
 
+      - name: Clean Obsolete Files
+        run: |
+          rm -f app/src/main/java/com/vibration/lite/core/PlayStoreActivity.java
+          rm -f app/src/main/java/com/vibration/lite/core/GameUpdateManager.java
+          rm -f app/src/main/java/com/vibration/lite/core/StubActivity.java
+          rm -f app/src/main/res/layout/activity_play_store.xml
+
       - name: Accept Android SDK Licenses
         run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses 2>/dev/null || true
 
