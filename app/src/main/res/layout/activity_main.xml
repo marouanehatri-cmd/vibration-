@@ -1,54 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#07080E"
     android:padding="20dp">
 
-    <!-- Top Status HUD Bar -->
+    <!-- Top Telemetry HUD -->
     <LinearLayout
-        android:id="@+id/hudContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:weightSum="2"
-        app:layout_constraintTop_toTopOf="parent">
+        android:weightSum="2">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:background="@drawable/card_glass_bg"
-            android:padding="10dp"
+            android:background="#121626"
+            android:padding="12dp"
             android:layout_marginEnd="6dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="RAM USAGE (IDLE)"
+                android:text="RAM USAGE"
                 android:textColor="#9CA3AF"
                 android:textSize="10sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvRamBadge"
+                android:id="@+id/tvRamUsage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="74 MB / 150 MB"
+                android:text="Querying RAM..."
                 android:textColor="#10B981"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
-                android:layout_marginTop="2dp" />
+                android:layout_marginTop="3dp" />
 
             <ProgressBar
                 android:id="@+id/ramProgressBar"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
-                android:progress="48"
+                android:progress="45"
                 android:progressTint="#10B981"
                 android:layout_marginTop="6dp" />
         </LinearLayout>
@@ -58,54 +55,52 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:background="@drawable/card_glass_bg"
-            android:padding="10dp"
+            android:background="#121626"
+            android:padding="12dp"
             android:layout_marginStart="6dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="GPU BOOST"
-                android:textColor="#9CA3AF"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvGpuBadge"
+                android:id="@+id/tvFpsCounter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="60 FPS TURBO"
                 android:textColor="#38BDF8"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:layout_marginTop="2dp" />
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvGpuBoost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GPU BOOST: ACTIVE"
+                android:textColor="#818CF8"
+                android:textSize="10sp"
+                android:layout_marginTop="3dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="● Hardware Accel ON"
-                android:textColor="#818CF8"
-                android:textSize="10sp"
+                android:text="● Hardware Acceleration ON"
+                android:textColor="#C084FC"
+                android:textSize="9sp"
                 android:layout_marginTop="4dp" />
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Center Stage: Glow Logo & Brand Identity -->
+    <!-- Center Branding -->
     <LinearLayout
-        android:id="@+id/centerBranding"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/hudContainer"
-        app:layout_constraintBottom_toTopOf="@id/actionsContainer">
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/ivLogo"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:src="@drawable/logo_vibration"
-            android:contentDescription="Vibration Neon Logo" />
+            android:src="@drawable/ic_launcher"
+            android:contentDescription="Vibration Logo" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -115,7 +110,7 @@
             android:textSize="28sp"
             android:textStyle="bold"
             android:letterSpacing="0.18"
-            android:layout_marginTop="12dp" />
+            android:layout_marginTop="14dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -125,126 +120,54 @@
             android:textSize="13sp"
             android:layout_marginTop="2dp" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvEngineStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="@drawable/badge_pill_bg"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="6dp"
-            android:layout_marginTop="12dp">
-
-            <View
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:background="@drawable/dot_green"
-                android:layout_marginEnd="8dp" />
-
-            <TextView
-                android:id="@+id/tvEngineStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vibration Engine Ready"
-                android:textColor="#C084FC"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+            android:text="● Vibration Ready"
+            android:textColor="#C084FC"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp" />
     </LinearLayout>
 
-    <!-- Bottom Actions: Primary Buttons & Play Store Hub -->
+    <!-- 3 Real Interactive Buttons -->
     <LinearLayout
-        android:id="@+id/actionsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="12dp">
+        android:orientation="vertical">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAddApp"
+        <Button
+            android:id="@+id/btnAddEfootball"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="58dp"
             android:text="ADD eFOOTBALL"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:backgroundTint="#151928" />
+
+        <Button
+            android:id="@+id/btnLaunchVibration"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:layout_marginTop="10dp"
+            android:text="LAUNCH VIBRATION"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:letterSpacing="0.08"
-            app:cornerRadius="16dp"
-            app:backgroundTint="#151928"
-            app:strokeColor="#8B5CF6"
-            app:strokeWidth="2dp"
-            app:icon="@android:drawable/ic_input_add"
-            app:iconTint="#A855F7"
-            app:iconGravity="textStart" />
+            android:backgroundTint="#7C3AED" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLaunch"
+        <Button
+            android:id="@+id/btnPlayStoreHub"
             android:layout_width="match_parent"
-            android:layout_height="62dp"
-            android:layout_marginTop="12dp"
-            android:text="LAUNCH VIBRATION"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:layout_height="56dp"
+            android:layout_marginTop="10dp"
+            android:text="GOOGLE PLAY STORE HUB ↗"
+            android:textColor="#38BDF8"
+            android:textSize="13sp"
             android:textStyle="bold"
-            android:letterSpacing="0.08"
-            app:cornerRadius="16dp"
-            app:backgroundTint="#7C3AED"
-            app:icon="@android:drawable/ic_media_play"
-            app:iconTint="#FFFFFF"
-            app:iconGravity="textStart" />
-
-        <LinearLayout
-            android:id="@+id/cardPlayStore"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/card_glass_bg"
-            android:padding="12dp"
-            android:layout_marginTop="14dp"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@android:drawable/ic_menu_upload"
-                app:tint="#38BDF8"
-                android:layout_marginEnd="12dp" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tvPlayStoreTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Google Play Store Hub"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvGameVersion"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Install or Update eFootball directly"
-                    android:textColor="#94A3B8"
-                    android:textSize="11sp" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="OPEN ↗"
-                android:textColor="#38BDF8"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+            android:backgroundTint="#121626" />
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
