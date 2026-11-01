@@ -239,4 +239,4 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         mTelemetryHandler.removeCallbacks(mTelemetryRunnable);
     }
-}
+            }
