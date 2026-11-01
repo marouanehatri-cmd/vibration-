@@ -21,11 +21,35 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Gradle
+      - name: Setup Gradle 8.4
         uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.4'
 
-      - name: Accept Android SDK Licenses
-        run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
+      - name: Configure Android SDK and Fallback Icon
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          mkdir -p app/src/main/res/drawable
+          mkdir -p app/src/main/res/mipmap-anydpi-v26
+          cat << 'EOF' > app/src/main/res/drawable/ic_launcher.xml
+          <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              android:width="108dp"
+              android:height="108dp"
+              android:viewportWidth="108"
+              android:viewportHeight="108">
+              <path
+                  android:fillColor="#8B5CF6"
+                  android:pathData="M30,30 L54,78 L78,30 Z"/>
+          </vector>
+          EOF
+          mkdir -p app/src/main/res/mipmap-hdpi
+          mkdir -p app/src/main/res/mipmap-xhdpi
+          mkdir -p app/src/main/res/mipmap-xxhdpi
+          mkdir -p app/src/main/res/mipmap-xxxhdpi
+          cp app/src/main/res/drawable/ic_launcher.xml app/src/main/res/mipmap-hdpi/ic_launcher.xml || true
+          cp app/src/main/res/drawable/ic_launcher.xml app/src/main/res/mipmap-xhdpi/ic_launcher.xml || true
+          cp app/src/main/res/drawable/ic_launcher.xml app/src/main/res/mipmap-xxhdpi/ic_launcher.xml || true
+          cp app/src/main/res/drawable/ic_launcher.xml app/src/main/res/mipmap-xxxhdpi/ic_launcher.xml || true
 
       - name: Build Debug APK
         run: gradle assembleDebug --stacktrace --no-daemon
