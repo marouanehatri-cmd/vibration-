@@ -1,173 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#07080E"
-    android:padding="20dp">
+    android:fillViewport="true">
 
-    <!-- Top Telemetry HUD -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:background="#121626"
-            android:padding="12dp"
-            android:layout_marginEnd="6dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="RAM USAGE"
-                android:textColor="#9CA3AF"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvRamUsage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Querying RAM..."
-                android:textColor="#10B981"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:layout_marginTop="3dp" />
-
-            <ProgressBar
-                android:id="@+id/ramProgressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:progress="45"
-                android:progressTint="#10B981"
-                android:layout_marginTop="6dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:background="#121626"
-            android:padding="12dp"
-            android:layout_marginStart="6dp">
-
-            <TextView
-                android:id="@+id/tvFpsCounter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="60 FPS TURBO"
-                android:textColor="#38BDF8"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvGpuBoost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="GPU BOOST: ACTIVE"
-                android:textColor="#818CF8"
-                android:textSize="10sp"
-                android:layout_marginTop="3dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="● Hardware Acceleration ON"
-                android:textColor="#C084FC"
-                android:textSize="9sp"
-                android:layout_marginTop="4dp" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <!-- Center Branding -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
         android:orientation="vertical"
-        android:gravity="center">
+        android:padding="20dp"
+        android:gravity="center_horizontal">
 
+        <!-- Top HUD Cards: RAM & GPU/FPS -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="#121626"
+                android:padding="12dp"
+                android:layout_marginEnd="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="RAM USAGE (LIVE)"
+                    android:textColor="#9CA3AF"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvRamUsage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="68 MB / 512 MB"
+                    android:textColor="#10B981"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp" />
+
+                <ProgressBar
+                    android:id="@+id/ramProgressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:progress="35"
+                    android:max="100"
+                    android:layout_marginTop="6dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="#121626"
+                android:padding="12dp"
+                android:layout_marginStart="6dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GPU &amp; DISPLAY"
+                    android:textColor="#9CA3AF"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvFpsCounter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="60 Hz TARGET"
+                    android:textColor="#38BDF8"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp" />
+
+                <TextView
+                    android:id="@+id/tvGpuBoost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="● Hardware Accel ON"
+                    android:textColor="#C084FC"
+                    android:textSize="10sp"
+                    android:layout_marginTop="6dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Center Logo & Title -->
         <ImageView
             android:id="@+id/ivLogo"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:src="@drawable/ic_launcher"
-            android:contentDescription="Vibration Logo" />
+            android:contentDescription="Vibration Logo"
+            android:layout_marginTop="20dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="VIBRATION"
             android:textColor="#FFFFFF"
-            android:textSize="28sp"
+            android:textSize="26sp"
             android:textStyle="bold"
-            android:letterSpacing="0.18"
-            android:layout_marginTop="14dp" />
+            android:letterSpacing="0.16"
+            android:layout_marginTop="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ultra-Performance Virtual Space"
             android:textColor="#94A3B8"
-            android:textSize="13sp"
+            android:textSize="12sp"
             android:layout_marginTop="2dp" />
 
         <TextView
             android:id="@+id/tvEngineStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="● Vibration Ready"
+            android:text="Virtual Space Ready • 60 FPS Boost"
             android:textColor="#C084FC"
             android:textSize="12sp"
-            android:textStyle="bold"
+            android:background="#1E1635"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
             android:layout_marginTop="10dp" />
-    </LinearLayout>
 
-    <!-- 3 Real Interactive Buttons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <Button
+        <!-- 4 REAL ACTION BUTTONS -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAddEfootball"
             android:layout_width="match_parent"
-            android:layout_height="58dp"
+            android:layout_height="56dp"
             android:text="ADD eFOOTBALL"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:backgroundTint="#151928" />
+            app:backgroundTint="#151928"
+            app:strokeColor="#9333EA"
+            app:strokeWidth="2dp"
+            app:cornerRadius="14dp"
+            android:layout_marginTop="24dp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLaunchVibration"
             android:layout_width="match_parent"
-            android:layout_height="62dp"
-            android:layout_marginTop="10dp"
-            android:text="LAUNCH VIBRATION"
+            android:layout_height="58dp"
+            android:text="⚡ LAUNCH VIBRATION"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:backgroundTint="#7C3AED" />
+            app:backgroundTint="#7E22CE"
+            app:cornerRadius="14dp"
+            android:layout_marginTop="12dp" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPlayStoreHub"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="54dp"
             android:text="GOOGLE PLAY STORE HUB ↗"
             android:textColor="#38BDF8"
             android:textSize="13sp"
             android:textStyle="bold"
-            android:backgroundTint="#121626" />
-    </LinearLayout>
+            app:backgroundTint="#121626"
+            app:strokeColor="#38BDF8"
+            app:strokeWidth="1dp"
+            app:cornerRadius="14dp"
+            android:layout_marginTop="12dp" />
 
-</LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnInstallPlayStoreInside"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:text="INSTALL PLAY STORE INSIDE (GBOX)"
+            android:textColor="#10B981"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:backgroundTint="#0F241E"
+            app:strokeColor="#10B981"
+            app:strokeWidth="1dp"
+            app:cornerRadius="14dp"
+            android:layout_marginTop="12dp" />
+
+    </LinearLayout>
+</ScrollView>
