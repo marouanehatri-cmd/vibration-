@@ -1,12 +1,6 @@
 <resources>
     <string name="app_name">Vibration</string>
-    <string name="btn_add_efootball">Add eFootball</string>
-    <string name="btn_launch_vibration">Launch Vibration</string>
-    <string name="btn_update_game">Check Update</string>
+    <string name="btn_add_efootball">ADD eFOOTBALL</string>
+    <string name="btn_launch_vibration">LAUNCH VIBRATION</string>
     <string name="status_ready">Vibration Engine Ready</string>
-    <string name="status_cloned">eFootball Cloned &amp; Isolated</string>
-    <string name="status_running">Running at 60 FPS (GPU Boost)</string>
-    <string name="desc_minimal">Ultra-Lightweight Virtual Space</string>
-    <string name="msg_package_not_installed">eFootball (com.konami.efootballpes) is not installed on this device. Opening Play Store...</string>
-    <string name="msg_clone_success">eFootball cloned successfully into Vibration sandbox.</string>
 </resources>

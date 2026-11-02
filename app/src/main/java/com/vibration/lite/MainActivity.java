@@ -98,16 +98,12 @@ public class MainActivity extends AppCompatActivity {
                 PerformanceOptimizer.trimMemory(MainActivity.this);
 
                 if (VirtualCoreEngine.get().isAppCloned(TARGET_GAME_PACKAGE)) {
-                    VirtualCoreEngine.get().launchApp(MainActivity.this, TARGET_GAME_PACKAGE);
-                } else if (isAppInstalledOnDevice(TARGET_GAME_PACKAGE)) {
-                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage(TARGET_GAME_PACKAGE);
-                    if (launchIntent != null) {
-                        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(launchIntent);
+                    boolean launched = VirtualCoreEngine.get().launchApp(MainActivity.this, TARGET_GAME_PACKAGE);
+                    if (!launched) {
+                        openGameOnDeviceOrHub();
                     }
                 } else {
-                    Toast.makeText(MainActivity.this, "eFootball not found. Opening Store...", Toast.LENGTH_SHORT).show();
-                    openPlayStoreHub();
+                    openGameOnDeviceOrHub();
                 }
             }
         });
@@ -151,7 +147,10 @@ public class MainActivity extends AppCompatActivity {
                 triggerRealVibration(40);
                 if (VirtualCoreEngine.get().isAppInstalled(PLAY_STORE_PACKAGE)) {
                     Toast.makeText(MainActivity.this, "Opening Play Store inside Virtual Space...", Toast.LENGTH_SHORT).show();
-                    VirtualCoreEngine.get().launchApp(MainActivity.this, PLAY_STORE_PACKAGE);
+                    boolean launched = VirtualCoreEngine.get().launchApp(MainActivity.this, PLAY_STORE_PACKAGE);
+                    if (!launched) {
+                        openPlayStoreHub();
+                    }
                 } else {
                     installPlayStoreInside();
                 }
@@ -159,17 +158,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void openGameOnDeviceOrHub() {
+        if (isAppInstalledOnDevice(TARGET_GAME_PACKAGE)) {
+            try {
+                Intent launchIntent = getPackageManager().getLaunchIntentForPackage(TARGET_GAME_PACKAGE);
+                if (launchIntent != null) {
+                    launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(launchIntent);
+                    return;
+                }
+            } catch (Throwable ignored) {}
+        }
+        Toast.makeText(MainActivity.this, "eFootball not found on device. Opening Play Store...", Toast.LENGTH_SHORT).show();
+        openPlayStoreHub();
+    }
+
     private void triggerRealVibration(long milliseconds) {
         try {
             Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-            if (vibrator != null && vibrator.hasVibrator()) {
+            if (vibrator != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     vibrator.vibrate(VibrationEffect.createOneShot(milliseconds, VibrationEffect.DEFAULT_AMPLITUDE));
                 } else {
                     vibrator.vibrate(milliseconds);
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Throwable ignored) {}
     }
 
     public void openPlayStoreHub() {
@@ -178,22 +192,30 @@ public class MainActivity extends AppCompatActivity {
             intent.setPackage(PLAY_STORE_PACKAGE);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-        } catch (Exception e1) {
+        } catch (Throwable e1) {
             try {
                 Intent fallback = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + TARGET_GAME_PACKAGE));
                 fallback.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(fallback);
-            } catch (Exception e2) {
-                // Huawei fallback dialog
-                showHuaweiPlayStoreDialog();
+            } catch (Throwable e2) {
+                try {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + TARGET_GAME_PACKAGE));
+                    browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(browserIntent);
+                } catch (Throwable e3) {
+                    showHuaweiPlayStoreDialog();
+                }
             }
         }
     }
 
     private void showHuaweiPlayStoreDialog() {
+        if (isFinishing()) return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && isDestroyed()) return;
+
         new AlertDialog.Builder(this)
-            .setTitle("Google Play Store Not Found")
-            .setMessage("No Google Play Store was found on this device (common on Huawei/Honor devices).\n\nWould you like to install Play Store INSIDE Vibration (GBox virtual space)?")
+            .setTitle("Google Play Store")
+            .setMessage("No Google Play Store app found on device.\n\nWould you like to install Play Store INSIDE Vibration (Sandbox) or open in browser?")
             .setPositiveButton("Install Inside", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -207,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + TARGET_GAME_PACKAGE));
                         webIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(webIntent);
-                    } catch (Exception ignored) {}
+                    } catch (Throwable ignored) {}
                 }
             })
             .setNegativeButton("Cancel", null)
@@ -223,7 +245,6 @@ public class MainActivity extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Step 1: Install microG GmsCore inside virtual space
                 if (!VirtualCoreEngine.get().isAppInstalled(GMS_PACKAGE)) {
                     VirtualCoreEngine.get().installPackage(GMS_PACKAGE, MainActivity.this);
                     VirtualCoreEngine.get().installPackage("com.google.android.gsf", MainActivity.this);
@@ -231,7 +252,6 @@ public class MainActivity extends AppCompatActivity {
 
                 Toast.makeText(MainActivity.this, "Installing Play Store...", Toast.LENGTH_SHORT).show();
 
-                // Step 2: Install Play Store inside virtual space
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override
                     public void run() {
