@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp"
+        android:padding="16dp"
         android:gravity="center_horizontal">
 
         <!-- Top HUD Cards: RAM & GPU/FPS -->
@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:background="#121626"
+                android:background="@drawable/card_glass_bg"
                 android:padding="12dp"
                 android:layout_marginEnd="6dp">
 
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:background="#121626"
+                android:background="@drawable/card_glass_bg"
                 android:padding="12dp"
                 android:layout_marginStart="6dp">
 
@@ -100,26 +100,26 @@
         <!-- Center Logo & Title -->
         <ImageView
             android:id="@+id/ivLogo"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
             android:src="@drawable/ic_launcher"
             android:contentDescription="Vibration Logo"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="16dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="VIBRATION"
             android:textColor="#FFFFFF"
-            android:textSize="26sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             android:letterSpacing="0.16"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="8dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ultra-Performance Virtual Space"
+            android:text="Ultra-Performance Virtual Space &amp; App Cloner"
             android:textColor="#94A3B8"
             android:textSize="12sp"
             android:layout_marginTop="2dp" />
@@ -130,73 +130,172 @@
             android:layout_height="wrap_content"
             android:text="Virtual Space Ready • 60 FPS Boost"
             android:textColor="#C084FC"
-            android:textSize="12sp"
-            android:background="#1E1635"
+            android:textSize="11sp"
+            android:background="@drawable/badge_pill_bg"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="8dp" />
+
+        <!-- VIRTUAL DESKTOP: CLONED APPS SECTION -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="VIRTUAL DESKTOP (SANDBOX APPS)"
+                    android:textColor="#C084FC"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08" />
+
+                <TextView
+                    android:id="@+id/tvAppCountBadge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3 APPS READY"
+                    android:textColor="#10B981"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Dynamic Apps Container (Always populated, never empty) -->
+            <LinearLayout
+                android:id="@+id/llVirtualAppsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <!-- Button: Clone Any App From Device -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddCustomApp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="+ CLONE ANY APP FROM PHONE"
+                android:textColor="#38BDF8"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:strokeColor="#38BDF8"
+                app:strokeWidth="1.5dp"
+                app:cornerRadius="12dp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
 
         <!-- 4 REAL ACTION BUTTONS -->
-
-        <!-- 1. ADD EFOOTBALL -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAddEfootball"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="ADD eFOOTBALL"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            app:backgroundTint="#151928"
-            app:strokeColor="#9333EA"
-            app:strokeWidth="2dp"
-            app:cornerRadius="14dp"
-            android:layout_marginTop="24dp" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="18dp">
 
-        <!-- 2. LAUNCH VIBRATION -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLaunchVibration"
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:text="⚡ LAUNCH VIBRATION"
-            android:textColor="#FFFFFF"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:backgroundTint="#7E22CE"
-            app:cornerRadius="14dp"
-            android:layout_marginTop="12dp" />
+            <!-- 1. LAUNCH VIBRATION (800ms Boost) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLaunchVibration"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="⚡ LAUNCH VIBRATION TURBO"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:backgroundTint="#7E22CE"
+                app:cornerRadius="14dp"
+                android:layout_marginTop="6dp" />
 
-        <!-- 3. GOOGLE PLAY STORE HUB -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnPlayStoreHub"
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:text="GOOGLE PLAY STORE HUB ↗"
-            android:textColor="#38BDF8"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            app:backgroundTint="#121626"
-            app:strokeColor="#38BDF8"
-            app:strokeWidth="1dp"
-            app:cornerRadius="14dp"
-            android:layout_marginTop="12dp" />
+            <!-- 2. ADD / RECLONE EFOOTBALL -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddEfootball"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="ADD eFOOTBALL"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                app:backgroundTint="#151928"
+                app:strokeColor="#9333EA"
+                app:strokeWidth="1.5dp"
+                app:cornerRadius="14dp"
+                android:layout_marginTop="8dp" />
 
-        <!-- 4. INSTALL PLAY STORE INSIDE (GBOX) -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnInstallPlayStoreInside"
+            <!-- 3. GOOGLE PLAY STORE HUB -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPlayStoreHub"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="GOOGLE PLAY STORE HUB ↗"
+                android:textColor="#38BDF8"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:backgroundTint="#121626"
+                app:strokeColor="#38BDF8"
+                app:strokeWidth="1dp"
+                app:cornerRadius="14dp"
+                android:layout_marginTop="8dp" />
+
+            <!-- 4. INSTALL PLAY STORE INSIDE (GBOX) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnInstallPlayStoreInside"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="INSTALL PLAY STORE INSIDE (GBOX)"
+                android:textColor="#10B981"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:backgroundTint="#0F241E"
+                app:strokeColor="#10B981"
+                app:strokeWidth="1dp"
+                app:cornerRadius="14dp"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+        <!-- Sandbox System Architecture Info -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:text="INSTALL PLAY STORE INSIDE (GBOX)"
-            android:textColor="#10B981"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            app:backgroundTint="#0F241E"
-            app:strokeColor="#10B981"
-            app:strokeWidth="1dp"
-            app:cornerRadius="14dp"
-            android:layout_marginTop="12dp" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/card_glass_bg"
+            android:padding="12dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SANDBOX ARCHITECTURE"
+                android:textColor="#9CA3AF"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Storage: /virtual_space/data/user/0/"
+                android:textColor="#C084FC"
+                android:textSize="10sp"
+                android:fontFamily="monospace"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status: Hardware Accelerated • 60 FPS Turbo Active"
+                android:textColor="#10B981"
+                android:textSize="10sp"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

@@ -7,6 +7,9 @@ on:
     branches: [ "main", "master" ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -39,9 +42,32 @@ jobs:
       - name: Build Debug APK
         run: gradle assembleDebug --no-daemon --info --stacktrace
 
-      - name: Upload Vibration APK
+      - name: Prepare Standalone APK Asset
+        run: |
+          mkdir -p release-output
+          cp app/build/outputs/apk/debug/*.apk release-output/Vibration-v1.0.apk
+
+      - name: Upload Vibration APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Vibration-v1.0-debug
-          path: app/build/outputs/apk/debug/*.apk
+          path: release-output/Vibration-v1.0.apk
           retention-days: 14
+
+      - name: Publish Direct APK to GitHub Releases
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        with:
+          tag_name: v1.0-release
+          name: "Vibration v1.0 (Direct APK Download)"
+          body: |
+            ### Vibration v1.0 - Ultra-Performance Virtual Space & App Cloner
+            - **Direct APK**: Tap `Vibration-v1.0.apk` below to download and install directly on Android.
+            - **Zero Extraction Required**: Directly installable package.
+            - **eFootball 2025 Ready**: 60 FPS Turbo booster & virtual sandbox.
+            - **Google Play Store & GMS**: Integrated sandbox container.
+          files: release-output/Vibration-v1.0.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
