@@ -1,5 +1,10 @@
 <resources>
     <color name="bg_dark">#07080E</color>
+    <color name="bg_card">#121626</color>
     <color name="accent_purple">#8B5CF6</color>
+    <color name="accent_blue">#38BDF8</color>
+    <color name="accent_cyan">#06B6D4</color>
     <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#9CA3AF</color>
+    <color name="green_neon">#10B981</color>
 </resources>
